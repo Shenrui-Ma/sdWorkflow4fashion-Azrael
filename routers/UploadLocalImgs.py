@@ -8,6 +8,7 @@
 import os
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
+from fastapi.encoders import jsonable_encoder
 import os
 from datetime import datetime
 import json
@@ -21,33 +22,34 @@ def get_newest_images(folder_path, num_images):
     # sort by creation date
     files.sort(key=lambda x: os.path.getctime(os.path.join(folder_path, x)))
     # get the 3 newest files
-    newest_files = files[-num_images:]
+    newest_files = files[-num_images:] 
     # return the newest files
     return newest_files
 
+# txt2img
 @router.get("/txt2img")
 async def get_txt2img_images():
-    folder_path = "E:/novelai-webui-aki-v3/outputs/txt2img-images"
-    num_images = 3
-    newest_files = get_newest_images(folder_path, num_images)
-    # return the 3 newest files
-    return json.dumps(newest_files)
+    # get the 3 newest images from the txt2img folder
+    txt2img_images = get_newest_images("E:/novelai-webui-aki-v3/outputs/txt2img-images", 3)
+    # return the image paths as JSON
+    return jsonable_encoder(txt2img_images)
 
+# img2img
 @router.get("/img2img")
 async def get_img2img_images():
-    folder_path = "E:/novelai-webui-aki-v3/outputs/img2img-images"
-    num_images = 3
-    newest_files = get_newest_images(folder_path, num_images)
-    # return the 3 newest files
-    return json.dumps(newest_files)
+    # get the 3 newest images from the img2img folder
+    img2img_images = get_newest_images("E:/novelai-webui-aki-v3/outputs/img2img-images", 3)
+    # return the image paths as JSON
+    return jsonable_encoder(img2img_images)
 
+# extras
 @router.get("/extras")
 async def get_extras_images():
-    folder_path = "E:/novelai-webui-aki-v3/outputs/extras-images"
-    num_images = 3
-    newest_files = get_newest_images(folder_path, num_images)
-    # return the 3 newest files
-    return json.dumps(newest_files)
+    # get the 3 newest images from the extras folder
+    extras_images = get_newest_images("E:/novelai-webui-aki-v3/outputs/extras-images", 3)
+    # return the image paths as JSON
+    return jsonable_encoder(extras_images)
+
 
 
 

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 
 // 图片展示组件
 const ImageDisplay = ({ images }) => {
+  if (!Array.isArray(images)) {
+    return <div>Error: images is not an array</div>;
+  }
   return (
     <div>
       {images.map((image, index) => (
@@ -19,24 +22,36 @@ const App = () => {
   const [extrasImages, setExtrasImages] = useState([]);
 
   const handleClick = async () => {
-    const txt2imgResponse = await fetch('http://localhost:5173/txt2img');
-    //先输出response看类型
-    console.log(txt2imgResponse);// 发现类型是Response，不是json,所以要转化为json
-    // 转化为json:
-    const txt2imgImages = await txt2imgResponse.json();
-    // 输出转化后的json看类型
-    console.log(txt2imgImages);// 发现类型是数组，可以直接使用
-    setTxt2imgImages(txt2imgImages.json);
+    // txt2img
+    const txt2imgUrl = 'http://localhost:5173/txt2img';
+    try {
+      const txt2imgResponse = await fetch(txt2imgUrl);
+      const txt2imgImages = await txt2imgResponse.json();
+      setTxt2imgImages(prevImages => [...prevImages, ...txt2imgImages]);
+    } catch (error) {
+      console.error('Error fetching txt2img:', error);
+    }
   
-
-    const img2imgResponse = await fetch('http://localhost:5173/img2img');
-    const img2imgImages = await img2imgResponse.json();
-    setImg2imgImages(img2imgImages);
-
-    const extrasResponse = await fetch('http://localhost:5173/extras');
-    const extrasImages = await extrasResponse.json();
-    setExtrasImages(extrasImages);
-};
+    // img2img
+    const img2imgUrl = 'http://localhost:5173/img2img';
+    try {
+      const img2imgResponse = await fetch(img2imgUrl);
+      const img2imgImages = await img2imgResponse.json();
+      setImg2imgImages(prevImages => [...prevImages, ...img2imgImages]);
+    } catch (error) {
+      console.error('Error fetching img2img:', error);
+    }
+  
+    // extras
+    const extrasUrl = 'http://localhost:5173/extras';
+    try {
+      const extrasResponse = await fetch(extrasUrl);
+      const extrasImages = await extrasResponse.json();
+      setExtrasImages(prevImages => [...prevImages, ...extrasImages]);
+    } catch (error) {
+      console.error('Error fetching extras:', error);
+    }
+  };
 
   // 页面渲染
   return (
