@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from routers import UploadLocalImgs
+from routers import upload_local_imgs_webui
+from fastapi import FastAPI, Form
+
 
 app = FastAPI()
 
@@ -10,4 +12,7 @@ def read_root():
 # include the router
 app.include_router(UploadLocalImgs.router)
 
-# Path: routers/UploadLocalImgs.py
+# Path: routers/upload_local_imgs_webui.py
+
+app = FastAPI()
+
