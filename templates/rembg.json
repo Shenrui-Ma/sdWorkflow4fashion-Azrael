@@ -2,7 +2,7 @@
   "2": {
     "inputs": {
       "transparency": true,
-      "model": "u2net_human_seg",
+      "model": "u2netp",
       "post_processing": false,
       "only_mask": false,
       "alpha_matting": false,
@@ -20,38 +20,9 @@
       "title": "Image Rembg (Remove Background)"
     }
   },
-  "6": {
-    "inputs": {
-      "directory": "测试revbg",
-      "image_load_cap": 0,
-      "skip_first_images": 0,
-      "select_every_nth": 1
-    },
-    "class_type": "VHS_LoadImages",
-    "_meta": {
-      "title": "Load Images (Upload) 🎥🅥🅗🅢"
-    }
-  },
-  "8": {
-    "inputs": {
-      "transparency": true,
-      "model": "u2net",
-      "post_processing": false,
-      "only_mask": false,
-      "alpha_matting": false,
-      "alpha_matting_foreground_threshold": 50,
-      "alpha_matting_background_threshold": 1,
-      "alpha_matting_erode_size": 1,
-      "background_color": "black"
-    },
-    "class_type": "Image Rembg (Remove Background)",
-    "_meta": {
-      "title": "Image Rembg (Remove Background)"
-    }
-  },
   "9": {
     "inputs": {
-      "image": "Weixin Image_20240330231541.png",
+      "image": "ComfyUI_00277_.png",
       "upload": "image"
     },
     "class_type": "LoadImage",

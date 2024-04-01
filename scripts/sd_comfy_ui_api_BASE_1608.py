@@ -11,7 +11,7 @@ import base64
 
 
 class SDComfyUIConfig:
-    def __init__(self, server_ip, server_port=8188,person_image_path=None,clothes_image_path=None, prompt=None, template_name=None, output_node_id=None):
+    def __init__(self, server_ip, server_port=8188, prompt=None, template_name=None, output_node_id=None):
         self.server_ip = server_ip
         self.server_port = server_port
         self.prompt = prompt
@@ -19,8 +19,8 @@ class SDComfyUIConfig:
         self.output_node_id = output_node_id
 
         # 额外添加两个参数person_image_path和clothes_image_path，但在初始化时不需要传入，默认为None
-        self.person_image_path = person_image_path
-        self.clothes_image_path = clothes_image_path
+        self.person_image_path = None
+        self.clothes_image_path = None
 
 
 class SDComfyUIApi:
@@ -168,8 +168,9 @@ class SDComfyUI_i2i_Api(SDComfyUIApi):
 
 
 def main(config):
-
-    sd_client = SDComfyUIApi(config)
+    # init SDComfyUIApi instance with server ip 
+    server_ip = "127.0.0.1"  
+    sd_client = SDComfyUIApi(server_ip)
     
     # get parameters from config
     prompt = config.prompt
@@ -188,12 +189,11 @@ def main(config):
 if __name__ == "__main__":
 
     # set custom parameters
-    server_ip = "127.0.0.1"  
     prompt = "best quality,masterpiece,artistic,1girl,standing,blue eyes,blonde hair,blue dress,blue ribbon,ribbon,ribbon in hair,smile,smiling,standing,white background"
     template_name = "generate_cloth_meinamix"
     output_node_id = "15"
     
     # create config
-    config = SDComfyUIConfig(server_ip=server_ip,prompt=prompt, template_name=template_name, output_node_id=output_node_id)
+    config = SDComfyUIConfig(prompt, template_name, output_node_id)
     
     main(config)

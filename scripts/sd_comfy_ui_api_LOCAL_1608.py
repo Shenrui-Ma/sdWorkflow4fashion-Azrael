@@ -11,7 +11,7 @@ import base64
 
 
 class SDComfyUIConfig:
-    def __init__(self, server_ip, server_port=8188,person_image_path=None,clothes_image_path=None, prompt=None, template_name=None, output_node_id=None):
+    def __init__(self, server_ip, server_port=8188, prompt=None, template_name=None,person_image_path=None,clothes_image_path=None,loadimage_node_id = None, output_node_id=None):
         self.server_ip = server_ip
         self.server_port = server_port
         self.prompt = prompt
@@ -21,6 +21,9 @@ class SDComfyUIConfig:
         # 额外添加两个参数person_image_path和clothes_image_path，但在初始化时不需要传入，默认为None
         self.person_image_path = person_image_path
         self.clothes_image_path = clothes_image_path
+
+        # 额外添加参数loadimga_node_id，但在初始化时不需要传入，默认为None
+        self.loadimage_node_id = loadimage_node_id
 
 
 class SDComfyUIApi:
@@ -47,14 +50,21 @@ class SDComfyUIApi:
                 return node_id
         return None
 
-    def queue_prompt(self, prompt =None): # 默认prompt可以为空
-        # 向服务器发送提示（prompt），并返回服务器的响应
-        p = {"prompt": prompt, "client_id": self.CLIENT_ID}
-        data = json.dumps(p).encode("utf-8") # 将数据编码为JSON格式
-        req = urllib.request.Request( # 发送请求
-            "http://{}/prompt".format(self.SERVER_ADDRESS), data=data
+    def queue_prompt(self, prompt=None):  # 默认prompt可以为空
+        p = {"client_id": self.CLIENT_ID}
+        if prompt is not None:
+            p["prompt"] = prompt
+        data = json.dumps(p).encode("utf-8")  # 将数据编码为JSON格式
+        headers = {'Content-Type': 'application/json'}  # 指定内容类型为JSON
+        req = urllib.request.Request(  # 发送请求
+            "http://{}/prompt".format(self.SERVER_ADDRESS), data=data, headers=headers
         )
-        return json.loads(urllib.request.urlopen(req).read()) # 返回服务器的响应
+        try:
+            response = urllib.request.urlopen(req)
+            return json.loads(response.read())  # 返回服务器的响应
+        except urllib.error.HTTPError as e:
+            print(f"请求失败，HTTP错误代码: {e.code}, 原因: {e.reason}")
+            return None
 
     def get_image(self, filename, subfolder, folder_type):
         # 从服务器获取指定的图像
@@ -112,6 +122,8 @@ class SDComfyUIApi:
         # 根据获取的节点id修改payload
         if positive_prompt_node_id:
             payload[positive_prompt_node_id]["inputs"]["text"] = prompt
+
+            
         if k_sampler_node_id:
             payload[k_sampler_node_id]["inputs"]["seed"] = (
                 seed if seed is not None else random.randint(0, 1000000)
@@ -147,11 +159,17 @@ class SDComfyUI_i2i_Api(SDComfyUIApi):
         # 使用函数获取节点id
         positive_prompt_node_id = self.find_positive_prompt_node_id(payload)
         k_sampler_node_id = self.find_k_sampler_node_id(payload)
+        loadimage_node_id = self.config.loadimage_node_id
         output_node_id = self.find_output_node_id(payload)  # 重新获取output_node_id
 
-        # 根据获取的节点id修改payload
+        # 把图片作为作为LoadImage节点的输入，loadimage节点的id是9
+        if loadimage_node_id:
+            payload[loadimage_node_id]["inputs"]["image"] = image_base64
+
         if positive_prompt_node_id:
-            payload[positive_prompt_node_id]["inputs"]["image"] = image_base64
+            print("给了给了"+payload[positive_prompt_node_id]["inputs"]["text"])
+            payload[positive_prompt_node_id]["inputs"]["text"] = "best_quality"
+
         if k_sampler_node_id:
             payload[k_sampler_node_id]["inputs"]["seed"] = (
                 seed if seed is not None else random.randint(0, 1000000)
@@ -166,9 +184,8 @@ class SDComfyUI_i2i_Api(SDComfyUIApi):
         # 返回指定节点ID的第一张图像
         return images[output_node_id][0] if output_node_id in images else None
 
-
 def main(config):
-
+    # init SDComfyUIApi instance with server ip  
     sd_client = SDComfyUIApi(config)
     
     # get parameters from config
@@ -186,14 +203,15 @@ def main(config):
 
 
 if __name__ == "__main__":
-
-    # set custom parameters
-    server_ip = "127.0.0.1"  
+    # 设置自定义参数
     prompt = "best quality,masterpiece,artistic,1girl,standing,blue eyes,blonde hair,blue dress,blue ribbon,ribbon,ribbon in hair,smile,smiling,standing,white background"
     template_name = "generate_cloth_meinamix"
+    server_ip = "127.0.0.1"  # 服务器IP
+    server_port = 8188  # 服务器端口，默认为8188
     output_node_id = "15"
     
-    # create config
-    config = SDComfyUIConfig(server_ip=server_ip,prompt=prompt, template_name=template_name, output_node_id=output_node_id)
+    # 创建配置实例
+    config = SDComfyUIConfig(server_ip=server_ip, server_port=server_port, prompt=prompt, template_name=template_name, output_node_id=output_node_id)
     
+    # 调用main函数
     main(config)
