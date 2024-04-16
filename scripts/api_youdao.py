@@ -40,6 +40,8 @@ def createRequest(q):
     print(f"原文本: {original_text}")
     print(f"翻译结果: {translation_result}")
     print(f"prompt: {prompt}")
+    
+    return prompt
 
 def doCall(url, headers, params, method):
     if 'get' == method:
@@ -48,7 +50,9 @@ def doCall(url, headers, params, method):
         return requests.post(url, data=params, headers=headers)  # 修改参数名和参数传递方式以匹配requests库的要求
 
 def decorate(s):
-    to_del = {'I', 'want', 'you', 'to', 'me', 'a', 'an', 'draw', 'with','he','her','him','she','his','hers'}
+    to_del = {'I', 'want', 'you', 'to', 'me', 'a', 'an', 'draw', 'with','he','her','him','she','his','hers','and'}
+    # 生成一个所有元素首字母大写的to_del集合,并和to_del集合合并
+    to_del = to_del.union({word.capitalize() for word in to_del})
     words = word_tokenize(s)
     tagged_words = pos_tag(words)
     
@@ -86,12 +90,9 @@ def decorate(s):
 
     return prefix + processed_words
 
-# 示例
-if __name__ == '__main__':
-    result = createRequest(q='我想要你给我画一件蓝色的长裙，镶嵌着蓝色的宝石')
-    print(result)
-
 # 网易有道智云翻译服务api调用demo
 # api接口: https://openapi.youdao.com/api
 if __name__ == '__main__':
     createRequest(q='我想要你给我画一件蓝色的长裙，镶嵌着蓝色的宝石')
+    print("")
+    createRequest(q='画一条黑色的女性晚礼服，上面有红色的玫瑰花，还有长长的裙摆，翘起的领子')
