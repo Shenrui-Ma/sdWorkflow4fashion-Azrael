@@ -1,8 +1,8 @@
 import requests
 import json
 import nltk
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
 
 from nltk.tokenize import word_tokenize
 from nltk import pos_tag
@@ -46,41 +46,50 @@ def doCall(url, headers, params, method):
         return requests.get(url, params=params, headers=headers)
     elif 'post' == method:
         return requests.post(url, data=params, headers=headers)  # 修改参数名和参数传递方式以匹配requests库的要求
-    
+
 def decorate(s):
-    to_del = {'I', 'want', 'you', 'to', 'me', 'a', 'an', 'draw'}
+    to_del = {'I', 'want', 'you', 'to', 'me', 'a', 'an', 'draw', 'with','he','her','him','she','his','hers'}
     words = word_tokenize(s)
     tagged_words = pos_tag(words)
     
     processed_words = []
-    nouns = []  
-    for word, tag in tagged_words:
+    noun_phrases = []  # 用于记录名词短语
+    for i, (word, tag) in enumerate(tagged_words):
         if word not in to_del:
             if tag.startswith('NN'):
-                nouns.append(word)
-                processed_words.append(word)
-                processed_words.append(',')  
+                # 检查下一个词是否也是名词，形成名词短语
+                if i+1 < len(tagged_words) and tagged_words[i+1][1].startswith('NN'):
+                    noun_phrase = word + ' ' + tagged_words[i+1][0]
+                    noun_phrases.append((noun_phrase, word))
+                    processed_words.append(noun_phrase + ',')
+                    continue
+                else:
+                    noun_phrases.append((word, word))
+                    processed_words.append(word + ',')
             else:
                 processed_words.append(word)
     
-    # 遍历记录的名词，将每个名词插入到上一个逗号之后
-    for noun in nouns:
-        # 找到第一个逗号的位置
-        first_comma_index = next((i for i, word in enumerate(processed_words) if ',' in word), -1)
-        if first_comma_index != -1:
-            # 如果有逗号，将名词插入到第一个逗号之后
-            processed_words.insert(first_comma_index + 1, noun)
-        else:
-            # 如果没有逗号，将名词放在第一位
-            processed_words.insert(0, noun)
+    # 在每个名词短语前插入单独的名词
+    for phrase, noun in noun_phrases:
+        phrase_index = processed_words.index(phrase + ',')
+        processed_words.insert(phrase_index, noun)
     
     # 移除列表中所有的逗号，然后在每个名词后重新添加逗号
     processed_words = [word for word in processed_words if word != ',']
     for i, word in enumerate(processed_words[:-1]):  # 避免在列表最后一个元素后添加逗号
-        if word in nouns:
+        if word in [np[1] for np in noun_phrases]:
             processed_words[i] = word + ','
+    
+    # 添加前缀
+    processed_words = ' '.join(processed_words).replace(' ,', ',')
+    prefix = "(best quality,8k),masterpiece,(simple flat background, none background, clear background: 1.5),"
 
-    return ' '.join(processed_words).replace(' ,', ',')
+    return prefix + processed_words
+
+# 示例
+if __name__ == '__main__':
+    result = createRequest(q='我想要你给我画一件蓝色的长裙，镶嵌着蓝色的宝石')
+    print(result)
 
 # 网易有道智云翻译服务api调用demo
 # api接口: https://openapi.youdao.com/api

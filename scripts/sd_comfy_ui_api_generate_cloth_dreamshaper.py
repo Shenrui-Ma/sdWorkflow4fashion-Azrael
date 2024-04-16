@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # 定义参数
     # my_prompt = "no_human,no_body,dress,blue dress,jewelry,gem,blue_gemstone"
     my_prompt = "long blue dress with kewelry and blue gemstone"
-    my_template_name = "generate_cloth_dreamshaper"
+    my_template_name = "generate_cloth_meinamix"
     my_output_node_id = "15"
     my_server_ip = "127.0.0.1"
     
