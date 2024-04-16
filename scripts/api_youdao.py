@@ -53,13 +53,13 @@ def decorate(s):
     tagged_words = pos_tag(words)
     
     processed_words = []
-    nouns = []  # 用于记录所有的名词
+    nouns = []  
     for word, tag in tagged_words:
         if word not in to_del:
             if tag.startswith('NN'):
                 nouns.append(word)
                 processed_words.append(word)
-                processed_words.append(',')  # 在名词后直接添加逗号
+                processed_words.append(',')  
             else:
                 processed_words.append(word)
     
