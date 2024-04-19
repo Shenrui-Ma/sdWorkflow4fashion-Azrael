@@ -42,9 +42,21 @@ def generate_cloth():
     generate_command = ['python', GENERATE_SCRIPT_PATH, str(prompt)]
     subprocess.run(generate_command)
 
-    # latest_image_path = os.path.join(IMAGE_FOLDER, 'latest_image.jpg')
-    latest_image_path = os.path.join(IMAGE_FOLDER, 'ComfyUI_00532_.png')
-    return send_file(latest_image_path, mimetype='image/jpeg')
+    newest_image = get_newest_image(IMAGE_FOLDER)
+
+    if newest_image:
+        return send_file(newest_image, mimetype='image/jpeg')
+    else:
+        return 'No image found'
+
+
+def get_newest_image(folder):
+    list_of_files = glob.glob(os.path.join(folder, '*.jpg'))
+    # 修改成文件中的图片格式
+    if not list_of_files:
+        return None
+    lastest_file = max(list_of_files, key=os.path.getctime)
+    return lastest_file
 
 if __name__ == '__main__':
     app.run(debug=True)
