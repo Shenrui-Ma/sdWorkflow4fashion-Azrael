@@ -40,3 +40,4 @@ if __name__ == "__main__":
     # 显示图像（可选）
     image = Image.open(io.BytesIO(image_data))
     image.show()
+    

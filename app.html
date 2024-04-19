@@ -109,7 +109,8 @@
         },
         methods: {
             generateCloth() {
-                fetch('/generate_cloth', {   //***和后端交互动态路由 可修改***
+                console.log('User Input:', this.userInput);
+                fetch('http://127.0.0.1:5000/generate_cloth', {   //***和后端交互动态路由 可修改***
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -147,7 +148,7 @@
 
         for (var i = 1; i <= 10; i++) {
             var img = document.createElement('img');
-            img.src = '示例图片/example_' + i + '.jpg'; //***将示例图片改为与该html文件在同一文件夹的其他文件夹名称，将该文件夹中的文件名改为example_i.jpg格式***
+            img.src = 'assets/example_' + i + '.png'; //***将示例图片改为与该html文件在同一文件夹的其他文件夹名称，将该文件夹中的文件名改为example_i.jpg格式***
             gallery.appendChild(img);
         }
 

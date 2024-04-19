@@ -7,7 +7,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 
-from utils.AuthV3Util import addAuthParams
+from AuthV3Util import addAuthParams
 
 # 您的应用ID
 APP_KEY = '378c255bb73242fc'
@@ -92,7 +92,7 @@ def decorate(s):
 
 # 网易有道智云翻译服务api调用demo
 # api接口: https://openapi.youdao.com/api
-if __name__ == '__main__':
-    createRequest(q='我想要你给我画一件蓝色的长裙，镶嵌着蓝色的宝石')
-    print("")
-    createRequest(q='画一条黑色的女性晚礼服，上面有红色的玫瑰花，还有长长的裙摆，翘起的领子')
+# if __name__ == '__main__':
+#     createRequest(q='我想要你给我画一件蓝色的长裙，镶嵌着蓝色的宝石')
+#     print("")
+#     createRequest(q='画一条黑色的女性晚礼服，上面有红色的玫瑰花，还有长长的裙摆，翘起的领子')
