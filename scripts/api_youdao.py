@@ -86,7 +86,7 @@ def decorate(s):
     
     # 添加前缀
     processed_words = ' '.join(processed_words).replace(' ,', ',')
-    prefix = "(best quality,8k),masterpiece,(simple flat background, none background, clear background: 1.5),"
+    prefix = "(best quality,8k),masterpiece,none background,"
 
     return prefix + processed_words
 

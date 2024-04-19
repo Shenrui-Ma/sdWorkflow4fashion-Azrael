@@ -22,8 +22,15 @@ def generate_cloth_dreamshaper(prompt, template_name, output_node_id, server_ip=
 if __name__ == "__main__":
     # 定义参数
     # my_prompt = "no_human,no_body,dress,blue dress,jewelry,gem,blue_gemstone"
-    my_prompt = "long blue dress with kewelry and blue gemstone"
-    my_template_name = "generate_cloth_meinamix"
+    # my_prompt = "long blue dress with jewelry and blue gemstone"
+    # my_prompt = "(best quality,8k),masterpiece,none background,evening gown, gown, red roses, roses, long hemline, hemline, upturned collar, collar,"
+    # my_prompt = "best quality,8k,masterpiece,none background,jacket,black jacket,leather jacket"
+    # my_prompt = "best quality,8k,masterpiece,none background,black maillot,latex cloth,"
+    my_prompt = "best quality,8k,masterpiece,none background,bra,hollowed out,hollowed out bra,swimsuit,"
+    # my_prompt = "best quality,8k,masterpiece,none background,grown,evening dress,detailed"
+    
+    my_template_name = "generate_cloth_dreamshaper"
+    # my_template_name = "generate_cloth_dreamshaper(900x1500)"
     my_output_node_id = "15"
     my_server_ip = "127.0.0.1"
     
