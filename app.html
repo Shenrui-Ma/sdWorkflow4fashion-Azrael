@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloth Generation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #user {
+            width: 80%; /* 设置容器宽度 */
+            margin: 50px auto; /* 将容器水平居中 */
+            text-align: center; /* 文字水平居中 */
+            border: 1px solid #ccc; /* 边框样式 */
+            padding: 20px; /* 内边距 */
+            border-radius: 5px; /* 边框圆角 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 添加阴影效果 */
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .input-group input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+        }
+        .input-group button {
+            padding: 10px 20px;
+            border: none;
+            background-color:rgb(37, 153, 153);
+            color: #fff;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result img {
+            max-width: 100%;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .gallery img {
+            width: 200px;
+            margin: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        .centered-button {
+            /* 按钮样式 */
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .centered-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="container">
+    <h1 class="title">Cloth Generation 服装生成</h1>
+
+    <div class="input-group">
+        <input type="text" v-model="userInput" placeholder="Enter your sentence 请输入你想要得到的服装样式">
+        <button @click="generateCloth">Generate</button>
+    </div>
+
+    <div class="result" v-if="imageUrl">
+        <img :src="imageUrl" alt="Generated Image">
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            userInput: '',
+            imageUrl: ''
+        },
+        methods: {
+            generateCloth() {
+                fetch('/generate_cloth', {   //***和后端交互动态路由 可修改***
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({user_input: this.userInput})
+                })
+                .then(response => response.blob())
+                .then(blob => {
+                    this.imageUrl = URL.createObjectURL(blob);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    });
+</script>
+<div id="user">
+    <p><b>拥抱未来时尚，释放创意无限！</b>让 AI 智能生成服装软件成为您的时尚灵感助手，为您打造独一无二的个性风格。</p>
+    <p>Embrace future fashion and unleash unlimited creativity! Let AI intelligent clothing generation software become your fashion inspiration assistant, creating a unique and personalized style for you.</p>
+    <p>从简单的自然语言描述到惊艳的时尚作品，让您的想象力得以释放，轻松创造出引人注目的服装设计。尽情挑战潮流，体验无与伦比的创意时尚之旅，与我们一同塑造明日时尚的风向标！</p>
+    <p>From simple natural language descriptions to stunning fashion pieces, unleash your imagination and effortlessly create eye-catching clothing designs. Challenge the trend to the fullest, experience an unparalleled creative fashion journey, and shape tomorrow's fashion trend together with us!</p>
+</div>
+<div class="input-group" >
+    <button class="centered-button" onclick="showExamples()">点击查看样例</button>
+</div>
+    <div class="gallery" id="gallery" style="display: none;">
+        <!-- 样例图片会动态生成并插入到这里 -->
+    </div>
+</div>
+
+<script>
+    function showExamples() {
+
+        var gallery = document.getElementById('gallery');
+        gallery.innerHTML = '';
+
+        for (var i = 1; i <= 10; i++) {
+            var img = document.createElement('img');
+            img.src = '示例图片/example_' + i + '.jpg'; //***将示例图片改为与该html文件在同一文件夹的其他文件夹名称，将该文件夹中的文件名改为example_i.jpg格式***
+            gallery.appendChild(img);
+        }
+
+        gallery.style.display = 'flex'; // 显示样例图片
+    }
+</script>
+</body>
+</html>
