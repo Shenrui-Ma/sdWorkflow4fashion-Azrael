@@ -11,9 +11,6 @@ CORS(app)
 # TRANSLATE_SCRIPT_PATH = "E:/Projects/Repos/sdWorkflow4fashion-Azrael/youdao.py"
 TRANSLATE_SCRIPT_PATH = "E:/Projects/Repos/sdWorkflow4fashion-Azrael/scripts/api_youdao.py"
 # 需要修改api_youdao.py的路径
-# GENERATE_SCRIPT_PATH = os.path.join('C:','Users','女明星','Desktop','综英小组作业','sd_comfy_ui_api_generate_cloth_dreamshaper.py')
-GENERATE_SCRIPT_PATH = "E:/Projects/Repos/sdWorkflow4fashion-Azrael/scripts/sd_comfy_ui_api_generate_cloth_dreamshaper.py"
-# 同上
 # IMAGE_FOLDER = "C:/Users/女明星/Desktop/综英小组作业/generate_images"
 IMAGE_FOLDER = "E:\ComfyUI-aki\ComfyUI-aki-v1.3\output"
 # 需要修改存储最新生成的图片的文件夹路径
