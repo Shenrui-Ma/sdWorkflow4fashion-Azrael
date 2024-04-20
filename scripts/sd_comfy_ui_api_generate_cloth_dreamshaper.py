@@ -4,6 +4,7 @@ import websocket
 from PIL import Image
 import io
 from sd_comfy_ui_api import SDComfyUIApi, SDComfyUIConfig
+import app
 
 
 def generate_cloth_dreamshaper(prompt, template_name, output_node_id, server_ip="127.0.0.1"):
@@ -26,7 +27,7 @@ if __name__ == "__main__":
     # my_prompt = "(best quality,8k),masterpiece,none background,evening gown, gown, red roses, roses, long hemline, hemline, upturned collar, collar,"
     # my_prompt = "best quality,8k,masterpiece,none background,jacket,black jacket,leather jacket"
     # my_prompt = "best quality,8k,masterpiece,none background,black maillot,latex cloth,"
-    my_prompt = "best quality,8k,masterpiece,none background,bra,hollowed out,hollowed out bra,swimsuit,"
+    my_prompt = app.get_prompt()
     # my_prompt = "best quality,8k,masterpiece,none background,grown,evening dress,detailed"
     
     my_template_name = "generate_cloth_dreamshaper"
