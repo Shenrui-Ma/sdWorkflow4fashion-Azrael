@@ -2,6 +2,7 @@ import os
 import subprocess
 from flask import Flask, request, send_file
 from flask_cors import CORS
+import glob
 import io
 
 app = Flask(__name__)
@@ -17,7 +18,7 @@ IMAGE_FOLDER = "E:\ComfyUI-aki\ComfyUI-aki-v1.3\output"
 prompt=None
 
 
-@app.route('/generate_cloth', methods=['GET', 'POST'])
+@app.route('/generate_cloth', methods=[ 'POST'])
 def get_prompt():
     global prompt
     if request.method == 'POST':
