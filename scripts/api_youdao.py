@@ -7,7 +7,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 
-from AuthV3Util import addAuthParams
+from scripts.AuthV3Util import addAuthParams
 
 # 您的应用ID
 APP_KEY = '378c255bb73242fc'
@@ -15,6 +15,7 @@ APP_KEY = '378c255bb73242fc'
 APP_SECRET = 'oq3xZxjEVpUi2j5bFDHAyNEdvyqLUGdq'
 
 def createRequest(q):
+    print("******************************************调用翻译")
     '''
     note: 将下列变量替换为需要请求的参数
     '''

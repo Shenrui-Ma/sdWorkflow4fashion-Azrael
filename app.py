@@ -4,6 +4,8 @@ from flask import Flask, request, send_file
 from flask_cors import CORS
 import glob
 import io
+from scripts.api_youdao import createRequest
+from scripts.sd_comfy_ui_api_generate_cloth_dreamshaper import generate_cloth_dreamshaper
 
 app = Flask(__name__)
 CORS(app)
@@ -17,8 +19,13 @@ IMAGE_FOLDER = "E:\ComfyUI-aki\ComfyUI-aki-v1.3\output"
 # 需要修改存储最新生成的图片的文件夹路径
 prompt=None
 
+# 测试用的
+@app.route('/')
+def index():
+    return "OK!"
 
-@app.route('/generate_cloth', methods=[ 'POST'])
+
+@app.route('/generate_cloth', methods=['GET', 'POST'])
 def get_prompt():
     global prompt
     if request.method == 'POST':
@@ -30,30 +37,61 @@ def get_prompt():
     if user_input is None:
         return "No user input provided", 400
 
-    translation_command = ['python', TRANSLATE_SCRIPT_PATH, user_input]
-    result = subprocess.run(translation_command, capture_output=True, text=True)
-    prompt = result
+    # 调用翻译脚本createRequest函数
+    result = createRequest(q=user_input)
+    prompt = str(result)  # 提取标准输出
+    print("******************************************生成文本")
+    print(prompt)
 
-    if prompt is None:
+    if not prompt:
+        print("Failed to generate prompt")
         return "Failed to generate prompt", 500
     else:
-        return prompt
+        print("******************************************调用生成文本")
+        print("******************************************调用画图")
+        # 调用生成图片的函数，并直接返回其结果
+        return generate_cloth()
+
 def generate_cloth():
+    # 调用生成图片脚本 generate_cloth_dreamshaper
+    image_data = generate_cloth_dreamshaper(prompt, "generate_cloth_dreamshaper", "15")
+    
     newest_image = get_newest_image(IMAGE_FOLDER)
-
     if newest_image:
-        return send_file(newest_image, mimetype='image/jpeg')
+        return send_file(newest_image, mimetype='image/png')  # 确保使用正确的MIME类型
     else:
-        return 'No image found'
+        return 'No image found', 404
 
+
+import os
+import glob
 
 def get_newest_image(folder):
-    list_of_files = glob.glob(os.path.join(folder, '*.jpg'))
-    # 修改成文件中的图片格式
+    """
+    获取指定文件夹中最新的.png格式图片的路径。
+
+    参数:
+    folder (str): 要搜索的文件夹路径。
+
+    返回:
+    str: 最新的.png图片的完整路径。如果没有找到任何.png图片，返回None。
+    """
+    # 构建搜索模式，匹配所有.png文件
+    search_pattern = os.path.join(folder, '*.png')
+    # 使用glob.glob找到所有匹配的文件
+    list_of_files = glob.glob(search_pattern)
+    
+    # 检查是否有找到文件
     if not list_of_files:
         return None
-    lastest_file = max(list_of_files, key=os.path.getctime)
-    return lastest_file
+    
+    # 使用max函数和os.path.getctime找到最新的文件
+    newest_file = max(list_of_files, key=os.path.getctime)
+    print("最新图片路径：", newest_file)
+    
+    return newest_file
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

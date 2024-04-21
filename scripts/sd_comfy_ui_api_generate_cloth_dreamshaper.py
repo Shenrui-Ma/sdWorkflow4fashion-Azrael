@@ -3,7 +3,7 @@ import base64
 import websocket
 from PIL import Image
 import io
-from sd_comfy_ui_api import SDComfyUIApi, SDComfyUIConfig
+from scripts.sd_comfy_ui_api import SDComfyUIApi, SDComfyUIConfig
 import app
 
 
@@ -27,8 +27,8 @@ if __name__ == "__main__":
     # my_prompt = "(best quality,8k),masterpiece,none background,evening gown, gown, red roses, roses, long hemline, hemline, upturned collar, collar,"
     # my_prompt = "best quality,8k,masterpiece,none background,jacket,black jacket,leather jacket"
     # my_prompt = "best quality,8k,masterpiece,none background,black maillot,latex cloth,"
-    my_prompt = app.get_prompt()
     # my_prompt = "best quality,8k,masterpiece,none background,grown,evening dress,detailed"
+    my_prompt = app.get_prompt()
     
     my_template_name = "generate_cloth_dreamshaper"
     # my_template_name = "generate_cloth_dreamshaper(900x1500)"
