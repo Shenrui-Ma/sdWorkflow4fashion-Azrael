@@ -7,7 +7,6 @@ from rembg.bg import remove
 print("导入rembg成功")
 import os
 
-# 目的：移除背景
 if __name__ == '__main__':
     img_url = r"E:\ComfyUI-aki\ComfyUI-aki-v1.3\output\ComfyUI_00360_.png"
     folder_path = os.path.dirname(img_url) 
