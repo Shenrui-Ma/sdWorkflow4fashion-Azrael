@@ -26,14 +26,11 @@ if __name__ == '__main__':
     plt.title('remove background image')
     plt.show()
 
-    # 获取文件名和文件夹路径
     file_name = os.path.basename(img_url)
     older_path = os.path.dirname(img_url)
 
-    # 将字节对象转换为NumPy数组并保存处理后的图像
     result_numpy_uint8 = (result_numpy).astype(np.uint8)
 
-    # 翻转颜色
     result_rgb = cv2.cvtColor(result_numpy_uint8, cv2.COLOR_BGR2RGB)
 
     save_path = os.path.join(folder_path, 'removed_' + file_name)
