@@ -83,16 +83,12 @@ def get_newest_image(folder):
     返回:
     str: 最新的.png图片的完整路径。如果没有找到任何.png图片，返回None。
     """
-    # 构建搜索模式，匹配所有.png文件
     search_pattern = os.path.join(folder, "*.png")
-    # 使用glob.glob找到所有匹配的文件
     list_of_files = glob.glob(search_pattern)
 
-    # 检查是否有找到文件
     if not list_of_files:
         return None
 
-    # 使用max函数和os.path.getctime找到最新的文件
     newest_file = max(list_of_files, key=os.path.getctime)
     print("最新图片路径：", newest_file)
 
